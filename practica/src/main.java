@@ -3,14 +3,67 @@
  */
 
 import org.jsoup.*;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import java.io.IOException;
+
 public class main {
 
-public static void main(String [] args){
+public static void main(String [] args) throws IOException {
+    //leemos el url
+    Scanner sc = new Scanner(System.in);
+    String url;
+    System.out.print("Introduzca url: ");
+    url = sc.nextLine();
+   //Nombre de la url   Documento desde un URL
+   Document doc = Jsoup.connect(url).get();
+    //Titulo
+   String titulo = doc.title();
+   System.out.print("\n Titulo: " +titulo);
+
+    //Cantidad de lineas
+    int Cantidadlineas = doc.html().split(System.getProperty("line.separator")).length;
+    System.out.printf("\n Total de lineas: "+ Cantidadlineas);
+
+    //Parrafos
+   Elements parrafos = doc.select("p"); // parrafos
+   System.out.print("\n Cantidad de parrafos: " + parrafos.size());
+
+    //Imagenes
+    Elements imagenes = doc.select("img"); // imagenes
+    System.out.print("\n Cantidad de imagenes: "+ imagenes.size());
+
+    //Formularios
+    Elements Formularios = doc.select("form");
+    System.out.print("\n Cantidad de formularios: " + Formularios.size());
+    //Mostrando el tipo y el nombre
+    ArrayList<Elements> inputs = new ArrayList<Elements>();
+
+    for(Element formulario : Formularios){
+        inputs.add(formulario.getElementsByTag("input"));
+    }
+    int contador=1;
+    for (Elements articulos : inputs ){
+
+        System.out.println("\nFormulario: # " + contador + ":");
+        for(Element input : articulos ){
+            String tipo = input.attr("type");
+            String nombre = input.attr("name");
+            System.out.println("Tipo: " + tipo + "  Nombre: "+ nombre + "\nCampos :" + input);
+        }
+        contador++;
+
+    }
 
 
-    System.out.println("Hello");
 
-
-}
+    }
 
 }
